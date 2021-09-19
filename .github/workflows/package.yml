@@ -52,5 +52,5 @@ jobs:
         else
           python setup.py develop || true
         fi
-        IFS=$'\n'; set -- $( find -iwholename "*test*[a-zA-Z0-9]*.py" -size +2000c; );
-        IFS=$'\n'; echo "$*" | xargs -d$'\n' -n4 -P4 bash -c 'for f in "$@"; do timeout 25s python -m pytest --color=yes "$f"; echo "[ $? ] $f"; done ' -- 
+        IFS=$'\n'; set -- $( find ../ -iwholename "*test*.py"; );
+        IFS=$'\n'; echo "$*" | xargs -d$'\n' -n2 -P2 bash -c 'for f in "$@"; do timeout 25s python -m pytest --color=yes "$f"; echo "[ $? ] $f"; done; exit 0; ' -- 
