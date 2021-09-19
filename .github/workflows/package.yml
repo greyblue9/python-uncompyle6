@@ -52,4 +52,4 @@ jobs:
         else
           python setup.py develop || true
         fi
-        python -m pytest -vv --full-trace --color=yes  --cov=uncompule6 --cov-append
+        find -iwholename "*tests*/[a-zA-Z0-9]*.py" -exec python -m pytest -v --color=yes  --doctest "{}" + || true
