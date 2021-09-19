@@ -52,4 +52,4 @@ jobs:
         else
           python setup.py develop || true
         fi
-        find -iwholename "*tests*/[a-zA-Z0-9]*.py" -exec python -m pytest -v --color=yes  --doctest "{}" + || true
+        find -iwholename "*test*[a-zA-Z0-9]*.py" -exec python -m pytest -v --color=yes "{}" \;
