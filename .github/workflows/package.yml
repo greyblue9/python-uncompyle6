@@ -51,7 +51,5 @@ jobs:
           python -m pip install "$whl" || true
         else
           python setup.py develop || true
-        else
-          true
         fi
         python -m pytest -vv --full-trace --color=yes  --cov=uncompule6 --cov-append
