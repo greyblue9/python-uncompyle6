@@ -1,4 +1,4 @@
-name: Python Package using Conda
+name: Package Python
 
 on: [push]
 
@@ -20,15 +20,17 @@ jobs:
         echo $CONDA/bin >> $GITHUB_PATH
     - name: Install dependencies
       run: |
-        conda env update --file environment.yml --name base
-    - name: Lint with flake8
-      run: |
-        conda install flake8
-        # stop the build if there are Python syntax errors or undefined names
-        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-        # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
-        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
-    - name: Test with pytest
-      run: |
-        conda install pytest
-        pytest
+        top_dir="$( realpath "$( find -mindepth 1 -maxdepth 2 -name "setup.py" | head -1 )"; )"
+        top_dir="$( dirname "$top_dor"; )"
+        echo "top_dir=$top_dir" 1>&2
+        cd "$top_dir"
+        python -m pip install --upgrade --force-reinstall setuptools pip wheel pytest coverage profiling pytest-cov
+        python -m pip install -r requirements.txt
+        python setup.py egg_info
+        python setup.py bsist_info
+        python setup.py build_egg
+        python setup.py build_whl
+        whl="$( find "$top_dir" -name "*.whl" -mmin -5 | head -1 )"
+        echo "whl=$whl" 1>&2
+        python -m pip install "$whl"
+        python -m pytest -vv --full-trace --color=yes --profile --cov --cov-append
