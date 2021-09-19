@@ -31,10 +31,25 @@ jobs:
         python setup.py egg_info || true
         python setup.py bdist_info || true
         python setup.py build_egg || true
+        python setup.py bdist_egg || true
+        python setup.py egg || true
         python setup.py build_whl || true
+        python setup.py bdist_whl || true
+        python setup.py wheel || true
+        python setup.py egg-info || true
+        python setup.py bdist-info || true
+        python setup.py build-egg || true
+        python setup.py bdist-egg || true
+        python setup.py build || true
+        python setup.py build-whl || true
+        python setup.py bdist-whl || true
+        python -m pip install -v -v -v . || true
+        python setup.py install --force-reinstall --no-deps || true
         whl="$( find "$top_dir" -name "*.whl" -mmin -5 | head -1 )"
         if [ -n "$whl" ]; then
           echo "whl=$whl" 1>&2
           python -m pip install "$whl"
-          python -m pytest -vv --full-trace --color=yes --profile --cov --cov-append
+        else
+          python setup.py develop
         fi
+        python -m pytest -vv --full-trace --color=yes --profile --cov --cov-append
