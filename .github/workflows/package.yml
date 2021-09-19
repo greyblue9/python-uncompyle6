@@ -26,11 +26,15 @@ jobs:
         cd "$top_dir"
         python -m pip install --upgrade --force-reinstall setuptools pip wheel pytest coverage profiling pytest-cov
         python -m pip install -r requirements.txt
-        python setup.py egg_info
-        python setup.py bsist_info
-        python setup.py build_egg
-        python setup.py build_whl
+        sudo apt install remake -y
+        remake --trace -k -B || true
+        python setup.py egg_info || true
+        python setup.py bdist_info || true
+        python setup.py build_egg || true
+        python setup.py build_whl || true
         whl="$( find "$top_dir" -name "*.whl" -mmin -5 | head -1 )"
-        echo "whl=$whl" 1>&2
-        python -m pip install "$whl"
-        python -m pytest -vv --full-trace --color=yes --profile --cov --cov-append
+        if [ -n "$whl" ]; then
+          echo "whl=$whl" 1>&2
+          python -m pip install "$whl"
+          python -m pytest -vv --full-trace --color=yes --profile --cov --cov-append
+        fi
