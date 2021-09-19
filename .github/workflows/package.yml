@@ -43,13 +43,13 @@ jobs:
         python setup.py build || true
         python setup.py build-whl || true
         python setup.py bdist-whl || true
-        python -m pip install -v -v -v . || true
-        python setup.py install --force-reinstall --no-deps || true
-        whl="$( find "$top_dir" -name "*.whl" -mmin -5 | head -1 )"
+        python -m pip install -v -v -v dist/uncompyle6-3.7.5.dev0-py3.9.egg || \
+        python setup.py install  || true
+        whl="$( find "$top_dir" -name "*.egg" -mmin -5 | head -1 )"
         if [ -n "$whl" ]; then
           echo "whl=$whl" 1>&2
           python -m pip install "$whl"
         else
           python setup.py develop
         fi
-        python -m pytest -vv --full-trace --color=yes --profile --cov --cov-append
+        python -m pytest -vv --full-trace --color=yes  --cov=uncompule6 --cov-append
